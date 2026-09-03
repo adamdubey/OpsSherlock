@@ -2,7 +2,7 @@ SHELL := /bin/bash
 MODEL ?= qwen3:8b
 SCENARIO ?= checkout_latency
 
-.PHONY: up down model smoke telemetry chaos-setup chaos-list chaos-status inject investigate incident auto-incident capture-evidence publish site demo reset ps logs test
+.PHONY: up down model smoke telemetry chaos-setup chaos-list chaos-status inject investigate incident auto-incident capture-evidence validate-evidence publish-evidence publish site demo reset ps logs test
 
 up:
 	docker compose up -d --build gateway catalog checkout payments orders postgres redis toxiproxy prometheus loki tempo alloy grafana ollama
@@ -51,6 +51,12 @@ auto-incident: inject
 capture-evidence:
 	docker compose --profile tools build publisher
 	docker compose --profile tools run --rm publisher --incident $(INCIDENT) --phase $(PHASE)
+
+validate-evidence:
+	python3 scripts/publish_evidence.py --incident $(INCIDENT) --validate-only
+
+publish-evidence:
+	python3 scripts/publish_evidence.py $(if $(INCIDENT),--incident $(INCIDENT),)
 
 publish: site
 	@echo "Publishing bundle built in site/dist"
