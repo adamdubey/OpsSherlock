@@ -1,31 +1,142 @@
+name: opssherlock
+
+x-app: &app
+  restart: unless-stopped
+  init: true
+  networks: [app, observability]
+
 services:
-  inventory:
-    build: ./services/inventory
+  gateway:
+    <<: *app
+    build:
+      context: .
+      dockerfile: services/gateway/Dockerfile
     environment:
-      SERVICE_NAME: inventory
-    ports:
-      - "8002:8000"
+      SERVICE_NAME: gateway
+      CATALOG_URL: http://catalog:8000
+      CHECKOUT_URL: http://checkout:8000
+      ORDERS_URL: http://orders:8000
+    ports: ["8080:8000"]
+    depends_on:
+      catalog: {condition: service_healthy}
+      checkout: {condition: service_healthy}
+      orders: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  catalog:
+    <<: *app
+    build:
+      context: .
+      dockerfile: services/catalog/Dockerfile
+    environment:
+      SERVICE_NAME: catalog
+      REDIS_URL: redis://redis:6379/0
+    ports: ["8002:8000"]
+    depends_on:
+      redis: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   checkout:
-    build: ./services/checkout
+    <<: *app
+    build:
+      context: .
+      dockerfile: services/checkout/Dockerfile
     environment:
       SERVICE_NAME: checkout
-      INVENTORY_URL: http://inventory:8000
+      CATALOG_URL: http://catalog:8000
+      PAYMENTS_URL: http://payments:8000
+      ORDERS_URL: http://orders:8000
+      UPSTREAM_TIMEOUT_SECONDS: "3"
+    ports: ["8001:8000"]
     depends_on:
-      - inventory
-    ports:
-      - "8001:8000"
+      catalog: {condition: service_healthy}
+      payments: {condition: service_healthy}
+      orders: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  payments:
+    <<: *app
+    build:
+      context: .
+      dockerfile: services/payments/Dockerfile
+    environment:
+      SERVICE_NAME: payments
+      PAYMENT_DELAY_MS: "60"
+    ports: ["8004:8000"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  orders:
+    <<: *app
+    build:
+      context: .
+      dockerfile: services/orders/Dockerfile
+    environment:
+      SERVICE_NAME: orders
+      DATABASE_URL: postgresql://baker:baker@postgres:5432/baker
+    ports: ["8003:8000"]
+    depends_on:
+      postgres: {condition: service_healthy}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: baker
+      POSTGRES_USER: baker
+      POSTGRES_PASSWORD: baker
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    networks: [app]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U baker -d baker"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes: ["redis-data:/data"]
+    networks: [app]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   prometheus:
     image: prom/prometheus:latest
     command: ["--config.file=/etc/prometheus/prometheus.yml"]
     volumes:
       - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    ports:
-      - "9090:9090"
+    ports: ["9090:9090"]
+    networks: [observability]
     depends_on:
-      - checkout
-      - inventory
+      gateway: {condition: service_healthy}
+      checkout: {condition: service_healthy}
 
   grafana:
     image: grafana/grafana:latest
@@ -36,17 +147,15 @@ services:
     volumes:
       - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
-    ports:
-      - "3000:3000"
-    depends_on:
-      - prometheus
+    ports: ["3000:3000"]
+    networks: [observability]
+    depends_on: [prometheus]
 
   ollama:
     image: ollama/ollama:latest
-    volumes:
-      - ollama-data:/root/.ollama
-    ports:
-      - "11434:11434"
+    volumes: ["ollama-data:/root/.ollama"]
+    ports: ["11434:11434"]
+    networks: [observability]
 
   agent:
     build: ./agent
@@ -60,10 +169,17 @@ services:
       - ./artifacts:/app/artifacts
       - ./scenarios:/app/scenarios:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks: [app, observability]
     depends_on:
-      - checkout
-      - prometheus
-      - ollama
+      checkout: {condition: service_healthy}
+      prometheus: {condition: service_started}
+      ollama: {condition: service_started}
+
+networks:
+  app: {}
+  observability: {}
 
 volumes:
+  postgres-data:
+  redis-data:
   ollama-data:
