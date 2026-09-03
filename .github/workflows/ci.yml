@@ -12,6 +12,6 @@ jobs:
       - name: Validate Compose
         run: docker compose config >/dev/null
       - name: Build demo services and agent
-        run: docker compose build checkout inventory agent
+        run: docker compose build gateway catalog checkout payments orders agent
       - name: Compile Python
         run: python -m compileall agent services site

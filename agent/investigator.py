@@ -9,7 +9,7 @@ QUERIES = {
     "checkout_p95": 'histogram_quantile(0.95, sum by (le) (rate(checkout_request_duration_seconds_bucket[1m])))',
     "checkout_rate": 'sum(rate(checkout_requests_total[1m]))',
     "fault_active": 'max(checkout_fault_active)',
-    "inventory_up": 'up{job="inventory"}',
+    "catalog_up": 'up{instance="catalog:8000"}',
     "checkout_up": 'up{job="checkout"}',
 }
 
@@ -28,7 +28,7 @@ def collect_logs():
         client = docker.from_env()
         out = {}
         for c in client.containers.list():
-            if any(name in c.name for name in ["checkout", "inventory"]):
+            if any(name in c.name for name in ["checkout", "catalog", "gateway", "payments", "orders"]):
                 out[c.name] = c.logs(tail=80).decode("utf-8", errors="replace")
         return out
     except Exception as exc:

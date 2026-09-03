@@ -9,5 +9,5 @@ expected:
   remediation: reset the fault or roll back the checkout change
 signals:
   - checkout p95 latency rises sharply
-  - inventory remains healthy
+  - catalog, payments, and orders remain healthy
   - checkout_fault_active becomes 1
