@@ -1,0 +1,114 @@
+{
+  "checkout_latency": {
+    "title": "Checkout processing latency",
+    "severity": "SEV-2",
+    "category": "application",
+    "difficulty": "easy",
+    "injector": {"kind": "checkout_fault", "name": "checkout_latency"},
+    "traffic": {"requests": 18, "interval_ms": 120},
+    "expected": {
+      "affected_service": "checkout",
+      "root_cause": "injected checkout processing latency",
+      "remediation": "reset the checkout fault or roll back the checkout change",
+      "keywords": ["checkout", "latency"]
+    }
+  },
+  "redis_latency": {
+    "title": "Redis dependency latency",
+    "severity": "SEV-2",
+    "category": "dependency",
+    "difficulty": "medium",
+    "injector": {"kind": "toxic", "proxy": "redis", "type": "latency", "stream": "downstream", "attributes": {"latency": 1400, "jitter": 100}},
+    "traffic": {"requests": 14, "interval_ms": 150},
+    "expected": {
+      "affected_service": "catalog",
+      "root_cause": "Redis latency behind the catalog service",
+      "remediation": "remove the Redis latency toxic and verify catalog recovery",
+      "keywords": ["redis", "latency", "catalog"]
+    }
+  },
+  "redis_outage": {
+    "title": "Redis dependency outage",
+    "severity": "SEV-1",
+    "category": "dependency",
+    "difficulty": "medium",
+    "injector": {"kind": "proxy_down", "proxy": "redis"},
+    "traffic": {"requests": 12, "interval_ms": 150},
+    "expected": {
+      "affected_service": "catalog",
+      "root_cause": "Redis is unreachable through the dependency proxy",
+      "remediation": "re-enable the Redis proxy and verify catalog readiness",
+      "keywords": ["redis", "catalog", "connect"]
+    }
+  },
+  "payments_latency": {
+    "title": "Payment provider latency",
+    "severity": "SEV-2",
+    "category": "dependency",
+    "difficulty": "medium",
+    "injector": {"kind": "toxic", "proxy": "payments", "type": "latency", "stream": "downstream", "attributes": {"latency": 2200, "jitter": 100}},
+    "traffic": {"requests": 12, "interval_ms": 180},
+    "expected": {
+      "affected_service": "payments",
+      "root_cause": "payment provider path has elevated network latency",
+      "remediation": "remove the payment latency toxic and verify checkout latency recovery",
+      "keywords": ["payment", "latency"]
+    }
+  },
+  "payments_timeout": {
+    "title": "Payment provider timeout",
+    "severity": "SEV-1",
+    "category": "dependency",
+    "difficulty": "hard",
+    "injector": {"kind": "toxic", "proxy": "payments", "type": "timeout", "stream": "downstream", "attributes": {"timeout": 900}},
+    "traffic": {"requests": 12, "interval_ms": 180},
+    "expected": {
+      "affected_service": "payments",
+      "root_cause": "payment dependency responses are timing out",
+      "remediation": "remove the timeout toxic and verify successful authorizations",
+      "keywords": ["payment", "timeout"]
+    }
+  },
+  "postgres_latency": {
+    "title": "PostgreSQL latency",
+    "severity": "SEV-2",
+    "category": "database",
+    "difficulty": "medium",
+    "injector": {"kind": "toxic", "proxy": "postgres", "type": "latency", "stream": "downstream", "attributes": {"latency": 1600, "jitter": 100}},
+    "traffic": {"requests": 10, "interval_ms": 180},
+    "expected": {
+      "affected_service": "orders",
+      "root_cause": "PostgreSQL dependency latency in the orders path",
+      "remediation": "remove the PostgreSQL latency toxic and verify order creation latency",
+      "keywords": ["postgres", "latency", "orders"]
+    }
+  },
+  "postgres_outage": {
+    "title": "PostgreSQL outage",
+    "severity": "SEV-1",
+    "category": "database",
+    "difficulty": "hard",
+    "injector": {"kind": "proxy_down", "proxy": "postgres"},
+    "traffic": {"requests": 10, "interval_ms": 180},
+    "expected": {
+      "affected_service": "orders",
+      "root_cause": "PostgreSQL is unreachable from the orders service",
+      "remediation": "re-enable the PostgreSQL proxy and verify order writes",
+      "keywords": ["postgres", "orders", "connect"]
+    }
+  },
+  "payments_container_crash": {
+    "title": "Payments container crash",
+    "severity": "SEV-1",
+    "category": "compute",
+    "difficulty": "easy",
+    "injector": {"kind": "container_stop", "service": "payments"},
+    "traffic": {"requests": 10, "interval_ms": 180},
+    "expected": {
+      "affected_service": "payments",
+      "root_cause": "payments service container is stopped",
+      "remediation": "restart the payments service and verify checkout recovery",
+      "keywords": ["payments", "container", "stopped"]
+    }
+  }
+}
