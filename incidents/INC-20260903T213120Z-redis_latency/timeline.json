@@ -1,0 +1,53 @@
+[
+  {
+    "timestamp": "2026-09-03T21:30:41.660381+00:00",
+    "phase": "detection",
+    "status": "waiting",
+    "detail": "Monitoring Baker Street telemetry for an incident trigger"
+  },
+  {
+    "timestamp": "2026-09-03T21:30:41.679855+00:00",
+    "phase": "detection",
+    "status": "triggered",
+    "detail": "Detected checkout_p95",
+    "detection": {
+      "trigger": "checkout_p95",
+      "value": 3.9530614625691616,
+      "threshold": 0.75
+    }
+  },
+  {
+    "timestamp": "2026-09-03T21:31:20.759877+00:00",
+    "phase": "investigation",
+    "status": "complete",
+    "detail": "AI investigation artifact created",
+    "incident_id": "INC-20260903T213120Z-redis_latency"
+  },
+  {
+    "timestamp": "2026-09-03T21:31:39.783899+00:00",
+    "phase": "evidence",
+    "status": "captured",
+    "detail": "Captured 2 Grafana screenshots",
+    "phase_name": "investigation"
+  },
+  {
+    "timestamp": "2026-09-03T21:31:39.783951+00:00",
+    "phase": "policy",
+    "status": "denied",
+    "detail": "action is not allowlisted",
+    "action": "none"
+  },
+  {
+    "timestamp": "2026-09-03T21:31:39.783958+00:00",
+    "phase": "remediation",
+    "status": "skipped",
+    "detail": "No autonomous action executed"
+  },
+  {
+    "timestamp": "2026-09-03T21:31:58.886070+00:00",
+    "phase": "evidence",
+    "status": "captured",
+    "detail": "Captured 2 Grafana screenshots",
+    "phase_name": "final"
+  }
+]
