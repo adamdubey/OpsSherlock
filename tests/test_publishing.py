@@ -39,6 +39,24 @@ class PublishingContractTests(unittest.TestCase):
         self.assertIn('"eval_count"', source)
         self.assertIn('"total_duration_ns"', source)
 
+    def test_site_normalizes_diagnosis_contract(self):
+        source = self.text("site", "build.py")
+        self.assertIn("def diagnosis_for(record):", source)
+        self.assertIn("affected_component", source)
+        self.assertIn("No structured root cause returned", source)
+        self.assertIn("not returned", source)
+
+    def test_site_renders_postmortem_inline(self):
+        source = self.text("site", "build.py")
+        self.assertIn("def markdown_to_html(markdown):", source)
+        self.assertIn(">Postmortem</h2>", source)
+        self.assertIn("postmortem.md", source)
+
+    def test_verified_recovery_requires_policy_approval(self):
+        source = self.text("site", "build.py")
+        self.assertIn('get("authorization", {}).get("approved")', source)
+        self.assertIn('get("recovery", {}).get("pass")', source)
+
 
 if __name__ == "__main__":
     unittest.main()
