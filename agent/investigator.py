@@ -144,10 +144,22 @@ EVIDENCE:\n{json.dumps(evidence, indent=2)[:18000]}
     try:
         r = requests.post(f"{OLLAMA}/api/generate", json=payload, timeout=180)
         r.raise_for_status()
-        raw = r.json().get("response", "{}")
-        return json.loads(raw)
+        response = r.json()
+        raw = response.get("response", "{}")
+        diagnosis = json.loads(raw)
+        model_stats = {
+            "model": response.get("model", MODEL),
+            "done_reason": response.get("done_reason"),
+            "total_duration_ns": response.get("total_duration"),
+            "load_duration_ns": response.get("load_duration"),
+            "prompt_eval_count": response.get("prompt_eval_count"),
+            "prompt_eval_duration_ns": response.get("prompt_eval_duration"),
+            "eval_count": response.get("eval_count"),
+            "eval_duration_ns": response.get("eval_duration"),
+        }
+        return diagnosis, model_stats
     except Exception as exc:
-        return {"error": str(exc), "root_cause": "model unavailable", "confidence": 0}
+        return ({"error": str(exc), "root_cause": "model unavailable", "confidence": 0}, {"model": MODEL, "error": str(exc)})
 
 
 def load_scenario(name):
@@ -188,7 +200,7 @@ def main():
         "recent_traces": tempo_traces(logs),
         "containers": docker_status(),
     }
-    diagnosis = ask_ollama(evidence)
+    diagnosis, model_stats = ask_ollama(evidence)
     evaluation = score(diagnosis, scenario)
 
     ts = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -201,6 +213,12 @@ def main():
         "evidence": evidence,
         "diagnosis": diagnosis,
         "evaluation": evaluation,
+        "run": {
+            "agent_version": "0.6.0",
+            "model": MODEL,
+            "model_stats": model_stats,
+            "telemetry_sources": ["prometheus", "loki", "tempo", "docker"],
+        },
     }
     (outdir / "incident.json").write_text(json.dumps(record, indent=2))
 
@@ -223,7 +241,14 @@ def main():
 
 **Severity:** {scenario['severity']}  
 **Evaluation:** {'PASS' if evaluation['pass'] else 'FAIL'}  
-**Model:** `{MODEL}`
+**Model:** `{MODEL}`  
+**Agent version:** `0.6.0`
+
+## Model run metadata
+
+```json
+{json.dumps(model_stats, indent=2)}
+```
 
 ## AI root-cause analysis
 
