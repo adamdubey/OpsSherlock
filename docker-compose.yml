@@ -1,0 +1,69 @@
+services:
+  inventory:
+    build: ./services/inventory
+    environment:
+      SERVICE_NAME: inventory
+    ports:
+      - "8002:8000"
+
+  checkout:
+    build: ./services/checkout
+    environment:
+      SERVICE_NAME: checkout
+      INVENTORY_URL: http://inventory:8000
+    depends_on:
+      - inventory
+    ports:
+      - "8001:8000"
+
+  prometheus:
+    image: prom/prometheus:latest
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - checkout
+      - inventory
+
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: Viewer
+      GF_SECURITY_ADMIN_PASSWORD: opssherlock
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+
+  agent:
+    build: ./agent
+    profiles: ["tools"]
+    environment:
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen3:8b}
+      OLLAMA_URL: http://ollama:11434
+      PROMETHEUS_URL: http://prometheus:9090
+      CHECKOUT_URL: http://checkout:8000
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./scenarios:/app/scenarios:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - checkout
+      - prometheus
+      - ollama
+
+volumes:
+  ollama-data:
