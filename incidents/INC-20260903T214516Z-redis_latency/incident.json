@@ -1,0 +1,1291 @@
+{
+  "id": "INC-20260903T214516Z-redis_latency",
+  "scenario": {
+    "title": "Redis dependency latency",
+    "severity": "SEV-2",
+    "category": "dependency",
+    "difficulty": "medium",
+    "injector": {
+      "kind": "toxic",
+      "proxy": "redis",
+      "type": "latency",
+      "stream": "downstream",
+      "attributes": {
+        "latency": 1400,
+        "jitter": 100
+      }
+    },
+    "traffic": {
+      "requests": 14,
+      "interval_ms": 150
+    },
+    "expected": {
+      "affected_service": "catalog",
+      "root_cause": "Redis latency behind the catalog service",
+      "remediation": "remove the Redis latency toxic and verify catalog recovery",
+      "keywords": [
+        "redis",
+        "latency",
+        "catalog"
+      ]
+    }
+  },
+  "evidence": {
+    "captured_at": "2026-09-03T21:44:48.936319+00:00",
+    "metrics": {
+      "checkout_p95": [
+        {
+          "metric": {},
+          "value": [
+            1788471888.936,
+            "4.124999999999999"
+          ]
+        }
+      ],
+      "checkout_rate": [
+        {
+          "metric": {},
+          "value": [
+            1788471888.938,
+            "0.2545547110804029"
+          ]
+        }
+      ],
+      "fault_active": [
+        {
+          "metric": {},
+          "value": [
+            1788471888.939,
+            "0"
+          ]
+        }
+      ],
+      "service_error_rate": [
+        {
+          "metric": {
+            "service": "gateway"
+          },
+          "value": [
+            1788471888.939,
+            "0.01818181818181818"
+          ]
+        },
+        {
+          "metric": {
+            "service": "checkout"
+          },
+          "value": [
+            1788471888.939,
+            "0.018182479362885924"
+          ]
+        }
+      ],
+      "service_p95": [
+        {
+          "metric": {
+            "service": "orders"
+          },
+          "value": [
+            1788471888.94,
+            "0.018624999999999996"
+          ]
+        },
+        {
+          "metric": {
+            "service": "gateway"
+          },
+          "value": [
+            1788471888.94,
+            "1.7416666666666667"
+          ]
+        },
+        {
+          "metric": {
+            "service": "payments"
+          },
+          "value": [
+            1788471888.94,
+            "0.08057692307692306"
+          ]
+        },
+        {
+          "metric": {
+            "service": "checkout"
+          },
+          "value": [
+            1788471888.94,
+            "1.7374999999999998"
+          ]
+        },
+        {
+          "metric": {
+            "service": "catalog"
+          },
+          "value": [
+            1788471888.94,
+            "1.7374999999999998"
+          ]
+        }
+      ],
+      "service_up": [
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "catalog:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788471888.941,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "orders:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788471888.941,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "gateway:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788471888.941,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "payments:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788471888.941,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "checkout:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788471888.941,
+            "1"
+          ]
+        }
+      ]
+    },
+    "centralized_logs": [
+      {
+        "ts_ns": "1788471885575461673",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:45Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"443bbbfe-a064-40a7-991a-06fa64eb5d38\", \"trace_id\": \"446309f82b97adad65c44f68be0d6e37\", \"span_id\": \"1fc11a3d589f12af\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471875441260377",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"6df6bb4a-b39f-4879-8b54-852eb4b4a880\", \"trace_id\": \"19b5636c1062e7e4cedfae6c08530060\", \"span_id\": \"fabd2209bccb23f9\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471885847347965",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:45Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"cded8cdf-3759-4824-98c9-1f32bcf0a3d3\", \"trace_id\": \"6b62ab36c6fc5583aeab477e15ec9e66\", \"span_id\": \"69b33d2370665b10\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.6\"}"
+      },
+      {
+        "ts_ns": "1788471875846536335",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"8f83f8e1-ff56-4c94-adfd-830779567265\", \"trace_id\": \"b0b7793624983834e99f61c528f24d3e\", \"span_id\": \"c760af95bdf0b1ae\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.8\"}"
+      },
+      {
+        "ts_ns": "1788471880852224838",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"a9bd4009-5c00-4f68-8f92-ba532cc29018\", \"trace_id\": \"76ef9552ffa057a8cb2da764268700aa\", \"span_id\": \"2f52efe80a76cbb2\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.8\"}"
+      },
+      {
+        "ts_ns": "1788471870849498458",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"54e67622-1cac-4b46-bdc9-5cfeb04b57bd\", \"trace_id\": \"57f598dc269249dbd615177fa5a3536f\", \"span_id\": \"bf00e75071fcb726\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.9\"}"
+      },
+      {
+        "ts_ns": "1788471873470904168",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"f8b54ccdae00cc1f\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1343.8\"}"
+      },
+      {
+        "ts_ns": "1788471881847548755",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"9ab26caf08ecdffc\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1355.4\"}"
+      },
+      {
+        "ts_ns": "1788471875107007127",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"5a3f8cfcecfab93e\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1367.7\"}"
+      },
+      {
+        "ts_ns": "1788471868393235846",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"cea329e07f18195e\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1371.2\"}"
+      },
+      {
+        "ts_ns": "1788471876787071336",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"98805b1679035286\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1419.5\"}"
+      },
+      {
+        "ts_ns": "1788471870095424180",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"da5768323f4076bc\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1434.1\"}"
+      },
+      {
+        "ts_ns": "1788471878496906545",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"060d68a7b135713e\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1442.4\"}"
+      },
+      {
+        "ts_ns": "1788471880221707754",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"7b765aa3dcb92882\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1456.7\"}"
+      },
+      {
+        "ts_ns": "1788471883583980631",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"b8dd70efea515ce5\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1468.8\"}"
+      },
+      {
+        "ts_ns": "1788471871860536542",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"774b61169ba4cfb3\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1495.9\"}"
+      },
+      {
+        "ts_ns": "1788471875108268460",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"461affadc713b04f\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471883585002381",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"eae24c69effd040b\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471871861802625",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"4ab82f8ce35c3a01\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471880222821296",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"a22a15673b2375ed\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471876788426044",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"4d942f2c9ce8c9c8\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471873472197334",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"d281b84002062de5\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471870096656680",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"d593510bbfb3242b\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471878498163628",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"83792d08736f8c1e\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471868394215680",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"e257d48200615646\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471881848635047",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"aef0fe71609f0a54\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471875199932210",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"461affadc713b04f\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471883671674423",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"eae24c69effd040b\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471871948481667",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"4ab82f8ce35c3a01\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471880314261004",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"a22a15673b2375ed\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471876877199503",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"4d942f2c9ce8c9c8\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471873559726168",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"d281b84002062de5\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471870187798639",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"d593510bbfb3242b\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471878586184128",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"83792d08736f8c1e\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471868481969721",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"e257d48200615646\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471881934314088",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"aef0fe71609f0a54\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471875181484377",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"461affadc713b04f\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471883653853464",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"eae24c69effd040b\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471871930516334",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"4ab82f8ce35c3a01\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471880293215088",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"a22a15673b2375ed\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471876859030711",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"4d942f2c9ce8c9c8\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471873540868959",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"d281b84002062de5\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471870170063097",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"d593510bbfb3242b\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471878566018253",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"83792d08736f8c1e\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471868464254513",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"e257d48200615646\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471881916517255",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"aef0fe71609f0a54\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471885575434882",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:45Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"3df24290-1fb5-4596-b1b5-597463500069\", \"trace_id\": \"045e56b7580312809f628f1e15be00e8\", \"span_id\": \"c69bac51c9973402\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471875441207627",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"975d5b60-78e2-4ba3-bb01-2308842b8894\", \"trace_id\": \"6b8cf0dae300106a038940d421f2ba95\", \"span_id\": \"c46eec2755926009\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471873232947584",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"683ccf7a-3303-4b2c-b4cc-b54a8f07a644\", \"trace_id\": \"05b73e4a03e10edf14b5e553caedd46d\", \"span_id\": \"c59bb305d604433d\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.2\"}"
+      },
+      {
+        "ts_ns": "1788471878233596045",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"58c3610b-824e-4763-b287-6a919b0462fc\", \"trace_id\": \"a6f7f6f3858d531290c40983e1c9abdf\", \"span_id\": \"a8c9365829eac01d\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.3\"}"
+      },
+      {
+        "ts_ns": "1788471868234241054",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"9f22bdf9-83ee-41ac-ab2a-ff2501f647db\", \"trace_id\": \"6301fd97a7e0bcb0be3de92bd34bd6b3\", \"span_id\": \"53fdfe9aa06c8436\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.4\"}"
+      },
+      {
+        "ts_ns": "1788471883237016922",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"61fa3839-312a-49a2-bf82-b25d987e8414\", \"trace_id\": \"36ba8912e6e578587c044f7d2ab8bbcd\", \"span_id\": \"7ef86f1b2c892359\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.5\"}"
+      },
+      {
+        "ts_ns": "1788471873560765793",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"d281b84002062de5\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1442.0\"}"
+      },
+      {
+        "ts_ns": "1788471881935152505",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"aef0fe71609f0a54\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1451.1\"}"
+      },
+      {
+        "ts_ns": "1788471868482780055",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"e257d48200615646\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1469.0\"}"
+      },
+      {
+        "ts_ns": "1788471875200908752",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"461affadc713b04f\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1469.7\"}"
+      },
+      {
+        "ts_ns": "1788471876878107503",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"4d942f2c9ce8c9c8\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1516.6\"}"
+      },
+      {
+        "ts_ns": "1788471870188742930",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"d593510bbfb3242b\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1535.1\"}"
+      },
+      {
+        "ts_ns": "1788471878587052087",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"83792d08736f8c1e\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1541.0\"}"
+      },
+      {
+        "ts_ns": "1788471880315122921",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"a22a15673b2375ed\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1558.2\"}"
+      },
+      {
+        "ts_ns": "1788471883672828131",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"eae24c69effd040b\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1566.2\"}"
+      },
+      {
+        "ts_ns": "1788471871949551542",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"4ab82f8ce35c3a01\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1592.8\"}"
+      },
+      {
+        "ts_ns": "1788471875201777377",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"cb19b3126c14c3cf\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471883673746089",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"ca6ce0bcf03c2a35\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471871950516542",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"fd8ef130f7db5a7c\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471880316133546",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"cd09079690337975\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471876879112586",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"606f2938a89eb7d8\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471873561712626",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"a689c43ceeeccbc4\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471870189653055",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"08b3799483bd3ec3\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471878587997628",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"2ce8ad4f26245228\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471868483497971",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"922f18cf6d1ed5a9\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471881935859630",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"baed87359ac3d325\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788471885912202299",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:45Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"f79c9890-0765-4b6c-886b-4debbd3d8e83\", \"trace_id\": \"54cb792075a2f1388770c3186fcb7c59\", \"span_id\": \"11b7cb3766c45bac\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471875781338044",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"cc788806-1354-4dad-b235-63e080e0840a\", \"trace_id\": \"0c77fe8296b0f1ba834a91cf83f238d6\", \"span_id\": \"09361e92c88924f5\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.7\"}"
+      },
+      {
+        "ts_ns": "1788471872908629584",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:32Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"9647f47d-e72a-49ab-b9dd-6d90b5e2f458\", \"trace_id\": \"f6c974d5f73b2b0eaf4fd138138aaf5e\", \"span_id\": \"e9eea7f0011cb5a3\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.9\"}"
+      },
+      {
+        "ts_ns": "1788471882908467547",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:42Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"f6e663df-aacc-47db-95c1-495a8ffd0771\", \"trace_id\": \"255950be68b4647a3dece0069fdd44b5\", \"span_id\": \"b4fb4ccdac089805\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.4\"}"
+      },
+      {
+        "ts_ns": "1788471867909520013",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:27Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"1893c404-38e0-4528-9cdc-b2c771c11b4e\", \"trace_id\": \"c576bc662083d8566b8369d5a5c44b7c\", \"span_id\": \"f34579803eb239d4\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.9\"}"
+      },
+      {
+        "ts_ns": "1788471877910429045",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:37Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"7e34e2c9-7190-4426-8a27-cc858c9ab64b\", \"trace_id\": \"c8f4dd7c5d1ddc71926b22251796dc5a\", \"span_id\": \"90fa29bf78be6fe6\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=3.7\"}"
+      },
+      {
+        "ts_ns": "1788471873562472459",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"a689c43ceeeccbc4\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1455.5\"}"
+      },
+      {
+        "ts_ns": "1788471881936438047",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"baed87359ac3d325\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1462.6\"}"
+      },
+      {
+        "ts_ns": "1788471868484089513",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"922f18cf6d1ed5a9\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1481.3\"}"
+      },
+      {
+        "ts_ns": "1788471875202449085",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"cb19b3126c14c3cf\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1481.7\"}"
+      },
+      {
+        "ts_ns": "1788471876879718503",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"606f2938a89eb7d8\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1523.3\"}"
+      },
+      {
+        "ts_ns": "1788471870190261972",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"08b3799483bd3ec3\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1547.2\"}"
+      },
+      {
+        "ts_ns": "1788471878588691253",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"2ce8ad4f26245228\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1552.6\"}"
+      },
+      {
+        "ts_ns": "1788471880316709796",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"cd09079690337975\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1570.0\"}"
+      },
+      {
+        "ts_ns": "1788471883674433256",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"ca6ce0bcf03c2a35\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1580.2\"}"
+      },
+      {
+        "ts_ns": "1788471871951160917",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"fd8ef130f7db5a7c\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1604.6\"}"
+      },
+      {
+        "ts_ns": "1788471885575441423",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:45Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"3f69ac45-d0c2-4a60-bfd9-9656ac07bae3\", \"trace_id\": \"136f3406b6b209c6ea940a6bf119e53f\", \"span_id\": \"bd9ab650409eb130\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471875441207710",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"7d7649ef-2fd1-4246-8353-544ae95e4fb9\", \"trace_id\": \"4aaa3fe69de134107763b4533d0a8f47\", \"span_id\": \"8a4fe41bff098b90\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471871142526708",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"030d9bff-f891-4964-8046-b93351509446\", \"trace_id\": \"7610644f50f5b2851d6306c140729e28\", \"span_id\": \"fbdfcd2f297a0512\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.6\"}"
+      },
+      {
+        "ts_ns": "1788471876144793044",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"75df7933-3354-4d01-a554-7d4c487746a3\", \"trace_id\": \"645e140d2f5340fdb156507e800fffa7\", \"span_id\": \"1b8973dfa956ce04\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.6\"}"
+      },
+      {
+        "ts_ns": "1788471886146814924",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:46Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"2708d05f-2481-4315-a691-282a49b59b89\", \"trace_id\": \"2a19e0cc898ec36c2b58b87bba9db344\", \"span_id\": \"0b52f6ec2195d614\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.9\"}"
+      },
+      {
+        "ts_ns": "1788471881145546963",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"dae3088f-068c-4a4e-b67f-8766860459cc\", \"trace_id\": \"a1d903d1f279f0fd5ab2cac53f540bcc\", \"span_id\": \"dfdc4f131ba36895\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.0\"}"
+      },
+      {
+        "ts_ns": "1788471880313580379",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"b98a689e1728f3ac\", \"message\": \"request method=POST path=/orders status=201 duration_ms=12.9\"}"
+      },
+      {
+        "ts_ns": "1788471868481354930",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"3880c3d243467b0d\", \"message\": \"request method=POST path=/orders status=201 duration_ms=13.0\"}"
+      },
+      {
+        "ts_ns": "1788471881933599338",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"cc9aa2561e2f662d\", \"message\": \"request method=POST path=/orders status=201 duration_ms=13.5\"}"
+      },
+      {
+        "ts_ns": "1788471876876524669",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"1dbf959441a20367\", \"message\": \"request method=POST path=/orders status=201 duration_ms=13.6\"}"
+      },
+      {
+        "ts_ns": "1788471883670955381",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"9976bc34a47da90b\", \"message\": \"request method=POST path=/orders status=201 duration_ms=13.8\"}"
+      },
+      {
+        "ts_ns": "1788471871947765125",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"d836b7054be64ab6\", \"message\": \"request method=POST path=/orders status=201 duration_ms=13.9\"}"
+      },
+      {
+        "ts_ns": "1788471870187163305",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"6f6b422adcb230ce\", \"message\": \"request method=POST path=/orders status=201 duration_ms=14.0\"}"
+      },
+      {
+        "ts_ns": "1788471875199034752",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"7ba7cbf7c3bbbe4c\", \"message\": \"request method=POST path=/orders status=201 duration_ms=14.2\"}"
+      },
+      {
+        "ts_ns": "1788471873558989459",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"5234730a62f147ad\", \"message\": \"request method=POST path=/orders status=201 duration_ms=14.2\"}"
+      },
+      {
+        "ts_ns": "1788471878585504503",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"12c799d29f143e5f\", \"message\": \"request method=POST path=/orders status=201 duration_ms=16.0\"}"
+      },
+      {
+        "ts_ns": "1788471881310261380",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"04f3454a-9d22-4200-9eeb-582bfe5c0419\", \"trace_id\": \"35ced532ece3755209ead1b50495fe2e\", \"span_id\": \"14e80a07ad5ec24f\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471871171236833",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"627090e1-8f5b-442a-bc04-58d5d56f0532\", \"trace_id\": \"71f430a90844a015d1c3bbc7cd1d96cc\", \"span_id\": \"01fc36e247b455bb\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788471873175371209",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"62967244-11c3-434a-97e2-c21922ee922a\", \"trace_id\": \"6843652953824dd304ac306bc8323559\", \"span_id\": \"dc4e38c2a2394b6d\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.8\"}"
+      },
+      {
+        "ts_ns": "1788471868170780971",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"eef7cea9-a88c-4ee9-ae05-06f4af452826\", \"trace_id\": \"cda26da42bf915164f0ee8bb756cae9f\", \"span_id\": \"0620183590089f82\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.9\"}"
+      },
+      {
+        "ts_ns": "1788471878173241920",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"0a45b11a-618f-4697-9e0e-dd8ddaee0542\", \"trace_id\": \"64a0fc878171c2de06ad09c760cd6e8e\", \"span_id\": \"7fc377e6855f2c9a\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.0\"}"
+      },
+      {
+        "ts_ns": "1788471883171070797",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"d802078d-f794-40e3-8f9b-d5d39eec64b1\", \"trace_id\": \"3823253e6bb618fb6244578d6065297c\", \"span_id\": \"db3c27ce8bc78e55\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.2\"}"
+      },
+      {
+        "ts_ns": "1788471881915381422",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:41Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"bd617959-0e1d-4f86-96d8-298a64d947f9\", \"trace_id\": \"0a4b450d0e480cc89b89edd8a6c946a8\", \"span_id\": \"77cde0b238c56541\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=61.5\"}"
+      },
+      {
+        "ts_ns": "1788471871929201542",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:31Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"36137cf5-6263-4a58-8b06-6e1df4467924\", \"trace_id\": \"398a7a40769b72a104d5e5864483ebda\", \"span_id\": \"7e08d5d841c21ea5\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=62.0\"}"
+      },
+      {
+        "ts_ns": "1788471878564584462",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:38Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"8f21eede-7a5e-459a-81a8-78b5cb7ba662\", \"trace_id\": \"3cd2219402facd4c1e79888bd0361925\", \"span_id\": \"819cfb5014344094\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=62.0\"}"
+      },
+      {
+        "ts_ns": "1788471873539444043",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:33Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"7e97dfcc-445f-45e2-b098-862b3b41ea3a\", \"trace_id\": \"52455b0b2710862d6ad34538a0b601c4\", \"span_id\": \"4d3845a11d6ba222\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=62.2\"}"
+      },
+      {
+        "ts_ns": "1788471883652418839",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:43Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"2d34b85d-315d-4954-9215-35371cb5ded8\", \"trace_id\": \"1572b689ba91f5e8e2b12ff644b157f7\", \"span_id\": \"2fc29455358a53b3\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=62.7\"}"
+      },
+      {
+        "ts_ns": "1788471868462991596",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:28Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"b0574047-ade1-4eea-b82d-e0fdcf76a868\", \"trace_id\": \"6209f1b0798e0fa516c50c2abdd27249\", \"span_id\": \"eac66ce89e7f6980\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=63.9\"}"
+      },
+      {
+        "ts_ns": "1788471880291733713",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:40Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"56d32650-2787-40f5-a103-01d1a518b966\", \"trace_id\": \"de57484f950677dd63b45d9e02cc8b13\", \"span_id\": \"e90182a3f5597396\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=64.0\"}"
+      },
+      {
+        "ts_ns": "1788471876857341961",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:36Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"74b8f948-4c48-4e7d-8779-0c0859e3289b\", \"trace_id\": \"b2d423f06f18d2f4be268dcd7ddca89a\", \"span_id\": \"7621a4268961b349\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=64.2\"}"
+      },
+      {
+        "ts_ns": "1788471870168807514",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:30Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"8d4babe2-e26b-42d5-98c5-bf2bb69bb432\", \"trace_id\": \"575f53151d31ab6e9b072fc7f008ba31\", \"span_id\": \"ec6ee6aa42269995\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=65.5\"}"
+      },
+      {
+        "ts_ns": "1788471875180052710",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:44:35Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"02238b39-98ad-433c-b2d8-09b628c78f51\", \"trace_id\": \"11508e757c24bad72be6043c0bb071c6\", \"span_id\": \"2867b71cd25a3bec\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=67.4\"}"
+      }
+    ],
+    "recent_traces": [
+      {
+        "trace_id": "446309f82b97adad65c44f68be0d6e37",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /health",
+            "duration_ms": 0.23,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "19b5636c1062e7e4cedfae6c08530060",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /health",
+            "duration_ms": 0.23,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "6b62ab36c6fc5583aeab477e15ec9e66",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /metrics",
+            "duration_ms": 0.58,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "b0b7793624983834e99f61c528f24d3e",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /metrics",
+            "duration_ms": 0.76,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "76ef9552ffa057a8cb2da764268700aa",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /metrics",
+            "duration_ms": 1.79,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "57f598dc269249dbd615177fa5a3536f",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /metrics",
+            "duration_ms": 2.76,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "52455b0b2710862d6ad34538a0b601c4",
+        "slowest_spans": [
+          {
+            "service": "gateway",
+            "name": "POST /api/checkout",
+            "duration_ms": 1455.36,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "gateway",
+            "name": "POST",
+            "duration_ms": 1446.72,
+            "http_url": "http://checkout:8000/checkout",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST /checkout",
+            "duration_ms": 1441.95,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "GET",
+            "duration_ms": 1347.2,
+            "http_url": "http://catalog:8000/products/OPS-001",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "GET /products/{sku}",
+            "duration_ms": 1343.88,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "redis GET product",
+            "duration_ms": 1342.86,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "redis",
+            "db_operation": "GET",
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 66.46,
+            "http_url": "http://toxiproxy:8666/authorize",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "POST /authorize",
+            "duration_ms": 62.23,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "mock-provider authorize",
+            "duration_ms": 60.68,
+            "http_url": null,
+            "http_status": null,
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": "mock-payment-provider"
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 17.24,
+            "http_url": "http://orders:8000/orders",
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "POST /orders",
+            "duration_ms": 14.19,
+            "http_url": null,
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "postgres connect",
+            "duration_ms": 9.23,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "postgresql",
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "0a4b450d0e480cc89b89edd8a6c946a8",
+        "slowest_spans": [
+          {
+            "service": "gateway",
+            "name": "POST /api/checkout",
+            "duration_ms": 1462.4,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "gateway",
+            "name": "POST",
+            "duration_ms": 1453.9,
+            "http_url": "http://checkout:8000/checkout",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST /checkout",
+            "duration_ms": 1451.0,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "GET",
+            "duration_ms": 1357.93,
+            "http_url": "http://catalog:8000/products/OPS-001",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "GET /products/{sku}",
+            "duration_ms": 1355.47,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "redis GET product",
+            "duration_ms": 1354.62,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "redis",
+            "db_operation": "GET",
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 66.01,
+            "http_url": "http://toxiproxy:8666/authorize",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "POST /authorize",
+            "duration_ms": 61.48,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "mock-provider authorize",
+            "duration_ms": 60.41,
+            "http_url": null,
+            "http_status": null,
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": "mock-payment-provider"
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 16.37,
+            "http_url": "http://orders:8000/orders",
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "POST /orders",
+            "duration_ms": 13.48,
+            "http_url": null,
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "postgres connect",
+            "duration_ms": 9.15,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "postgresql",
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      }
+    ],
+    "containers": {
+      "error": "404 Client Error for http+docker://localhost/v1.55/images/484436216a1683ff002b54451f3747ac6a8128383439cb095bcb67c00384edb3/json: Not Found (\"No such image: sha256:484436216a1683ff002b54451f3747ac6a8128383439cb095bcb67c00384edb3\")"
+    }
+  },
+  "diagnosis": {
+    "ts": "2026-09-03T21:44:35Z",
+    "level": "INFO",
+    "service": "checkout",
+    "request_id": "02238b39-98ad-433c-b2d8-09b628c78f51",
+    "trace_id": "11508e757c24bad72be6043c0b",
+    "span_id": "d4a2748025a00692",
+    "message": "HTTP Request: POST http://orders:8000/orders \"HTTP/1.1 201 Created\""
+  },
+  "evaluation": {
+    "service_match": false,
+    "root_cause_match": false,
+    "matched_keywords": [],
+    "required_keyword_matches": 2,
+    "pass": false
+  },
+  "run": {
+    "agent_version": "0.6.0",
+    "model": "qwen3:8b",
+    "model_stats": {
+      "model": "qwen3:8b",
+      "done_reason": "stop",
+      "total_duration_ns": 27218778638,
+      "load_duration_ns": 4357384753,
+      "prompt_eval_count": 2050,
+      "prompt_eval_duration_ns": 12961715000,
+      "eval_count": 159,
+      "eval_duration_ns": 9856836000
+    },
+    "telemetry_sources": [
+      "prometheus",
+      "loki",
+      "tempo",
+      "docker"
+    ]
+  },
+  "automation": {
+    "mode": "policy-controlled",
+    "fallback_used": false,
+    "detection": {
+      "trigger": "checkout_p95",
+      "value": 4.187499999999999,
+      "threshold": 0.75
+    },
+    "evidence": {
+      "investigation": {
+        "captured_at": "2026-09-03T21:45:21.478160+00:00",
+        "phase": "investigation",
+        "grafana_url": "http://grafana:3000",
+        "window": {
+          "from": "2026-09-03T21:30:21.478160+00:00",
+          "to": "2026-09-03T21:45:21.478160+00:00"
+        },
+        "screenshots": [
+          {
+            "dashboard_uid": "incident-investigation",
+            "label": "incident-investigation",
+            "file": "evidence/investigation-incident-investigation.png",
+            "status": "captured"
+          },
+          {
+            "dashboard_uid": "baker-street-overview",
+            "label": "baker-street-overview",
+            "file": "evidence/investigation-baker-street-overview.png",
+            "status": "captured"
+          }
+        ]
+      },
+      "final": {
+        "captured_at": "2026-09-03T21:45:40.722664+00:00",
+        "phase": "final",
+        "grafana_url": "http://grafana:3000",
+        "window": {
+          "from": "2026-09-03T21:30:40.722664+00:00",
+          "to": "2026-09-03T21:45:40.722664+00:00"
+        },
+        "screenshots": [
+          {
+            "dashboard_uid": "incident-investigation",
+            "label": "incident-investigation",
+            "file": "evidence/final-incident-investigation.png",
+            "status": "captured"
+          },
+          {
+            "dashboard_uid": "baker-street-overview",
+            "label": "baker-street-overview",
+            "file": "evidence/final-baker-street-overview.png",
+            "status": "captured"
+          }
+        ]
+      }
+    },
+    "authorization": {
+      "approved": false,
+      "action": "none",
+      "reason": "action is not allowlisted"
+    },
+    "recovery": {
+      "pass": false,
+      "skipped": true
+    }
+  },
+  "timeline": [
+    {
+      "timestamp": "2026-09-03T21:44:43.903753+00:00",
+      "phase": "detection",
+      "status": "waiting",
+      "detail": "Monitoring Baker Street telemetry for an incident trigger"
+    },
+    {
+      "timestamp": "2026-09-03T21:44:43.918534+00:00",
+      "phase": "detection",
+      "status": "triggered",
+      "detail": "Detected checkout_p95",
+      "detection": {
+        "trigger": "checkout_p95",
+        "value": 4.187499999999999,
+        "threshold": 0.75
+      }
+    },
+    {
+      "timestamp": "2026-09-03T21:45:16.634299+00:00",
+      "phase": "investigation",
+      "status": "complete",
+      "detail": "AI investigation artifact created",
+      "incident_id": "INC-20260903T214516Z-redis_latency"
+    },
+    {
+      "timestamp": "2026-09-03T21:45:36.017872+00:00",
+      "phase": "evidence",
+      "status": "captured",
+      "detail": "Captured 2 Grafana screenshots",
+      "phase_name": "investigation"
+    },
+    {
+      "timestamp": "2026-09-03T21:45:36.017926+00:00",
+      "phase": "policy",
+      "status": "denied",
+      "detail": "action is not allowlisted",
+      "action": "none"
+    },
+    {
+      "timestamp": "2026-09-03T21:45:36.017934+00:00",
+      "phase": "remediation",
+      "status": "skipped",
+      "detail": "No autonomous action executed"
+    },
+    {
+      "timestamp": "2026-09-03T21:45:55.141999+00:00",
+      "phase": "evidence",
+      "status": "captured",
+      "detail": "Captured 2 Grafana screenshots",
+      "phase_name": "final"
+    }
+  ]
+}

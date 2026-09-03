@@ -1,0 +1,23 @@
+{
+  "captured_at": "2026-09-03T21:45:21.478160+00:00",
+  "phase": "investigation",
+  "grafana_url": "http://grafana:3000",
+  "window": {
+    "from": "2026-09-03T21:30:21.478160+00:00",
+    "to": "2026-09-03T21:45:21.478160+00:00"
+  },
+  "screenshots": [
+    {
+      "dashboard_uid": "incident-investigation",
+      "label": "incident-investigation",
+      "file": "evidence/investigation-incident-investigation.png",
+      "status": "captured"
+    },
+    {
+      "dashboard_uid": "baker-street-overview",
+      "label": "baker-street-overview",
+      "file": "evidence/investigation-baker-street-overview.png",
+      "status": "captured"
+    }
+  ]
+}
