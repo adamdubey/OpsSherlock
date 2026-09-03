@@ -51,7 +51,7 @@ def configure_tracing(service_name: str):
             "service.name": service_name,
             "service.namespace": "baker-street",
             "deployment.environment.name": os.getenv("DEPLOYMENT_ENVIRONMENT", "local"),
-            "service.version": os.getenv("SERVICE_VERSION", "0.4.0"),
+            "service.version": os.getenv("SERVICE_VERSION", "0.5.0"),
         }
     )
     provider = TracerProvider(resource=resource)
