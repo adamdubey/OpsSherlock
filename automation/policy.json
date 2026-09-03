@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "minimum_confidence": 0.70,
+  "allowed_actions": {
+    "reset_checkout_fault": {
+      "description": "Clear the checkout application's injected fault state.",
+      "affected_services": ["checkout"],
+      "required_terms": ["checkout", "latency"],
+      "risk": "low"
+    },
+    "reset_redis_proxy": {
+      "description": "Remove Redis toxics and re-enable the Redis dependency proxy.",
+      "affected_services": ["catalog"],
+      "required_terms": ["redis"],
+      "risk": "low"
+    },
+    "reset_payments_proxy": {
+      "description": "Remove payment toxics and re-enable the payment dependency proxy.",
+      "affected_services": ["payments", "checkout"],
+      "required_terms": ["payment"],
+      "risk": "low"
+    },
+    "reset_postgres_proxy": {
+      "description": "Remove PostgreSQL toxics and re-enable the database dependency proxy.",
+      "affected_services": ["orders"],
+      "required_terms": ["postgres"],
+      "risk": "low"
+    },
+    "restart_payments": {
+      "description": "Restart the Baker Street payments service container.",
+      "affected_services": ["payments"],
+      "required_terms": ["payment", "container"],
+      "risk": "medium"
+    }
+  },
+  "fallback": {
+    "enabled": true,
+    "action": "lab_reset",
+    "description": "Reset all lab-only injected chaos after failed recovery verification."
+  },
+  "verification": {
+    "checkout_requests": 6,
+    "minimum_success_ratio": 1.0,
+    "request_timeout_seconds": 8,
+    "settle_seconds": 2
+  }
+}

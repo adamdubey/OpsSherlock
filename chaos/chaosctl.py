@@ -118,6 +118,25 @@ def inject(name):
     generate_traffic(scenario.get("traffic", {}))
 
 
+
+def repair(target):
+    """Perform one narrowly-scoped, reversible lab repair."""
+    if target == "checkout":
+        try:
+            urllib.request.urlopen(urllib.request.Request("http://localhost:8001/admin/fault/reset", data=b"", method="POST"), timeout=5).read()
+        except Exception as exc:
+            raise RuntimeError(f"failed to reset checkout fault: {exc}") from exc
+    elif target in PROXIES:
+        wait_toxi()
+        clear_toxics(target)
+        cfg = PROXIES[target]
+        request("POST", f"{TOXI}/proxies/{target}", {"name": target, **cfg, "enabled": True})
+    elif target == "payments-service":
+        subprocess.run(["docker", "compose", "up", "-d", "payments"], cwd=ROOT, check=True)
+    else:
+        raise RuntimeError(f"unsupported repair target: {target}")
+    print(f"Repair applied: {target}")
+
 def status():
     wait_toxi()
     data = request("GET", f"{TOXI}/proxies")
@@ -138,9 +157,16 @@ def main():
     sub.add_parser("list")
     i = sub.add_parser("inject")
     i.add_argument("scenario")
+    r = sub.add_parser("repair")
+    r.add_argument("target", choices=["checkout", "redis", "payments", "postgres", "payments-service"])
     args = p.parse_args()
     try:
-        {"setup": setup, "reset": reset, "status": status, "list": list_scenarios}.get(args.cmd, lambda: inject(args.scenario))()
+        if args.cmd == "inject":
+            inject(args.scenario)
+        elif args.cmd == "repair":
+            repair(args.target)
+        else:
+            {"setup": setup, "reset": reset, "status": status, "list": list_scenarios}[args.cmd]()
     except Exception as exc:
         print(f"chaosctl: {exc}", file=sys.stderr)
         raise SystemExit(1)

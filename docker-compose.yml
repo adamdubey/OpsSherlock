@@ -7,7 +7,7 @@ x-app: &app
   environment: &otel_env
     OTEL_EXPORTER_OTLP_ENDPOINT: http://alloy:4317
     DEPLOYMENT_ENVIRONMENT: local
-    SERVICE_VERSION: "0.4.0"
+    SERVICE_VERSION: "0.5.0"
   depends_on:
     alloy:
       condition: service_started

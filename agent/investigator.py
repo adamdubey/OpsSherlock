@@ -134,7 +134,9 @@ def ask_ollama(evidence):
 Analyze only the evidence supplied. Do not invent facts.
 Correlate metrics, centralized logs, recent distributed trace summaries, and container status.
 The incident was intentionally injected, but you are NOT told which scenario was used. Infer the most likely failing component and mechanism from telemetry only.
-Return JSON with keys: affected_service, root_cause, confidence (0-1), evidence (array), remediation, safety_note.
+Return JSON with keys: affected_service, root_cause, confidence (0-1), evidence (array), remediation, remediation_action, safety_note.
+The remediation_action must be exactly one of: none, reset_checkout_fault, reset_redis_proxy, reset_payments_proxy, reset_postgres_proxy, restart_payments.
+Choose none unless the telemetry strongly supports a specific reversible action.
 
 EVIDENCE:\n{json.dumps(evidence, indent=2)[:18000]}
 """

@@ -2,7 +2,7 @@ SHELL := /bin/bash
 MODEL ?= qwen3:8b
 SCENARIO ?= checkout_latency
 
-.PHONY: up down model smoke telemetry chaos-setup chaos-list chaos-status inject investigate incident site demo reset ps logs
+.PHONY: up down model smoke telemetry chaos-setup chaos-list chaos-status inject investigate incident auto-incident site demo reset ps logs test
 
 up:
 	docker compose up -d --build gateway catalog checkout payments orders postgres redis toxiproxy prometheus loki tempo alloy grafana ollama
@@ -38,18 +38,25 @@ inject:
 	./scripts/inject.sh $(SCENARIO)
 
 investigate:
+	docker compose --profile tools build agent
 	docker compose --profile tools run --rm agent python investigator.py --scenario $(SCENARIO)
 
 incident: inject
 	@sleep 8
 	@$(MAKE) investigate SCENARIO=$(SCENARIO)
 
+auto-incident: inject
+	python3 automation/incidentctl.py --scenario $(SCENARIO)
+
 site:
 	python3 site/build.py
 	@echo "Open site/dist/index.html"
 
+test:
+	python3 -m unittest discover -s tests -v
+
 demo: up
-	@echo "Run 'make smoke', 'make telemetry', 'make chaos-list', pull a model with 'make model MODEL=$(MODEL)', then 'make incident SCENARIO=$(SCENARIO)'"
+	@echo "Run 'make smoke', 'make telemetry', 'make chaos-list', pull a model with 'make model MODEL=$(MODEL)', then 'make auto-incident SCENARIO=$(SCENARIO)'"
 
 reset:
 	python3 chaos/chaosctl.py reset
