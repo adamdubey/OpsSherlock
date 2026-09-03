@@ -7,7 +7,7 @@ x-app: &app
   environment: &otel_env
     OTEL_EXPORTER_OTLP_ENDPOINT: http://alloy:4317
     DEPLOYMENT_ENVIRONMENT: local
-    SERVICE_VERSION: "0.3.0"
+    SERVICE_VERSION: "0.4.0"
   depends_on:
     alloy:
       condition: service_started
@@ -44,11 +44,12 @@ services:
     environment:
       <<: *otel_env
       SERVICE_NAME: catalog
-      REDIS_URL: redis://redis:6379/0
+      REDIS_URL: redis://toxiproxy:8667/0
     ports: ["8002:8000"]
     depends_on:
       alloy: {condition: service_started}
       redis: {condition: service_healthy}
+      toxiproxy: {condition: service_started}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s
@@ -64,7 +65,7 @@ services:
       <<: *otel_env
       SERVICE_NAME: checkout
       CATALOG_URL: http://catalog:8000
-      PAYMENTS_URL: http://payments:8000
+      PAYMENTS_URL: http://toxiproxy:8666
       ORDERS_URL: http://orders:8000
       UPSTREAM_TIMEOUT_SECONDS: "3"
     ports: ["8001:8000"]
@@ -72,6 +73,7 @@ services:
       alloy: {condition: service_started}
       catalog: {condition: service_healthy}
       payments: {condition: service_healthy}
+      toxiproxy: {condition: service_started}
       orders: {condition: service_healthy}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
@@ -105,11 +107,12 @@ services:
     environment:
       <<: *otel_env
       SERVICE_NAME: orders
-      DATABASE_URL: postgresql://baker:baker@postgres:5432/baker
+      DATABASE_URL: postgresql://baker:baker@toxiproxy:8668/baker
     ports: ["8003:8000"]
     depends_on:
       alloy: {condition: service_started}
       postgres: {condition: service_healthy}
+      toxiproxy: {condition: service_started}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 10s
@@ -144,6 +147,18 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+
+  toxiproxy:
+    image: ghcr.io/shopify/toxiproxy:2.12.0
+    restart: unless-stopped
+    ports:
+      - "8474:8474"
+    networks: [app]
+    depends_on:
+      redis: {condition: service_healthy}
+      postgres: {condition: service_healthy}
+      payments: {condition: service_healthy}
 
   prometheus:
     image: prom/prometheus:latest
@@ -235,7 +250,7 @@ services:
       CHECKOUT_URL: http://checkout:8000
     volumes:
       - ./artifacts:/app/artifacts
-      - ./scenarios:/app/scenarios:ro
+      - ./chaos:/app/chaos:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks: [app, observability]
     depends_on:
