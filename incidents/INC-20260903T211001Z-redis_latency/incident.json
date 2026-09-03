@@ -1,0 +1,1446 @@
+{
+  "id": "INC-20260903T211001Z-redis_latency",
+  "scenario": {
+    "title": "Redis dependency latency",
+    "severity": "SEV-2",
+    "category": "dependency",
+    "difficulty": "medium",
+    "injector": {
+      "kind": "toxic",
+      "proxy": "redis",
+      "type": "latency",
+      "stream": "downstream",
+      "attributes": {
+        "latency": 1400,
+        "jitter": 100
+      }
+    },
+    "traffic": {
+      "requests": 14,
+      "interval_ms": 150
+    },
+    "expected": {
+      "affected_service": "catalog",
+      "root_cause": "Redis latency behind the catalog service",
+      "remediation": "remove the Redis latency toxic and verify catalog recovery",
+      "keywords": [
+        "redis",
+        "latency",
+        "catalog"
+      ]
+    }
+  },
+  "evidence": {
+    "captured_at": "2026-09-03T21:09:37.865031+00:00",
+    "metrics": {
+      "checkout_p95": [
+        {
+          "metric": {},
+          "value": [
+            1788469777.865,
+            "3.6249999999999996"
+          ]
+        }
+      ],
+      "checkout_rate": [
+        {
+          "metric": {},
+          "value": [
+            1788469777.866,
+            "0.20983470437232254"
+          ]
+        }
+      ],
+      "fault_active": [],
+      "service_error_rate": [
+        {
+          "metric": {
+            "service": "gateway"
+          },
+          "value": [
+            1788469777.868,
+            "0"
+          ]
+        },
+        {
+          "metric": {
+            "service": "checkout"
+          },
+          "value": [
+            1788469777.868,
+            "0"
+          ]
+        }
+      ],
+      "service_p95": [
+        {
+          "metric": {
+            "service": "orders"
+          },
+          "value": [
+            1788469777.868,
+            "0.019576126582263004"
+          ]
+        },
+        {
+          "metric": {
+            "service": "gateway"
+          },
+          "value": [
+            1788469777.868,
+            "1.7733612797395195"
+          ]
+        },
+        {
+          "metric": {
+            "service": "payments"
+          },
+          "value": [
+            1788469777.868,
+            "0.08076923076923075"
+          ]
+        },
+        {
+          "metric": {
+            "service": "checkout"
+          },
+          "value": [
+            1788469777.868,
+            "1.71760161346624"
+          ]
+        },
+        {
+          "metric": {
+            "service": "catalog"
+          },
+          "value": [
+            1788469777.868,
+            "1.7473055106095963"
+          ]
+        }
+      ],
+      "service_up": [
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "catalog:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788469777.87,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "orders:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788469777.87,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "gateway:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788469777.87,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "payments:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788469777.87,
+            "1"
+          ]
+        },
+        {
+          "metric": {
+            "__name__": "up",
+            "instance": "checkout:8000",
+            "job": "baker-street"
+          },
+          "value": [
+            1788469777.87,
+            "1"
+          ]
+        }
+      ]
+    },
+    "centralized_logs": [
+      {
+        "ts_ns": "1788469742509514334",
+        "service": "catalog",
+        "line": "INFO:     Finished server process [7]"
+      },
+      {
+        "ts_ns": "1788469742508492209",
+        "service": "catalog",
+        "line": "INFO:     Application shutdown complete."
+      },
+      {
+        "ts_ns": "1788469742506623834",
+        "service": "catalog",
+        "line": "INFO:     Waiting for application shutdown."
+      },
+      {
+        "ts_ns": "1788469742403466876",
+        "service": "catalog",
+        "line": "INFO:     Shutting down"
+      },
+      {
+        "ts_ns": "1788469742923278043",
+        "service": "checkout",
+        "line": "INFO:     Finished server process [7]"
+      },
+      {
+        "ts_ns": "1788469742922648459",
+        "service": "checkout",
+        "line": "INFO:     Application shutdown complete."
+      },
+      {
+        "ts_ns": "1788469742920208001",
+        "service": "checkout",
+        "line": "INFO:     Waiting for application shutdown."
+      },
+      {
+        "ts_ns": "1788469742817478876",
+        "service": "checkout",
+        "line": "INFO:     Shutting down"
+      },
+      {
+        "ts_ns": "1788469743268978418",
+        "service": "gateway",
+        "line": "INFO:     Finished server process [7]"
+      },
+      {
+        "ts_ns": "1788469743268378959",
+        "service": "gateway",
+        "line": "INFO:     Application shutdown complete."
+      },
+      {
+        "ts_ns": "1788469743265233959",
+        "service": "gateway",
+        "line": "INFO:     Waiting for application shutdown."
+      },
+      {
+        "ts_ns": "1788469743157706418",
+        "service": "gateway",
+        "line": "INFO:     Shutting down"
+      },
+      {
+        "ts_ns": "1788469742555675251",
+        "service": "orders",
+        "line": "INFO:     Finished server process [7]"
+      },
+      {
+        "ts_ns": "1788469742554774042",
+        "service": "orders",
+        "line": "INFO:     Application shutdown complete."
+      },
+      {
+        "ts_ns": "1788469742551954376",
+        "service": "orders",
+        "line": "INFO:     Waiting for application shutdown."
+      },
+      {
+        "ts_ns": "1788469742450025126",
+        "service": "orders",
+        "line": "INFO:     Shutting down"
+      },
+      {
+        "ts_ns": "1788469736661138637",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:56Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"71bf04f3-7a35-4f2a-9b77-1132447c4278\", \"trace_id\": \"6e51907d203799328575efeaef855f5e\", \"span_id\": \"cbf4e4eca8e997ec\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788469730871519926",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"38e97920-34c4-484a-a08a-fc51dd86bca5\", \"trace_id\": \"19a13b441cce4c45d5806bf567fa93fc\", \"span_id\": \"5598dd82c0ec7563\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.8\"}"
+      },
+      {
+        "ts_ns": "1788469740857166917",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"e9e0064d-2750-4f55-ae65-4702ba8750b5\", \"trace_id\": \"b042fc752115d5cc362ec3997cab5de4\", \"span_id\": \"0a468dbb8bd2085f\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.1\"}"
+      },
+      {
+        "ts_ns": "1788469735872365970",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"1416c920-080d-4a95-b46b-dd8d813d4218\", \"trace_id\": \"820286410c45f98dc9fb74bd93131c28\", \"span_id\": \"f75378bea0fdba9e\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.3\"}"
+      },
+      {
+        "ts_ns": "1788469740563964333",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"3dcc4b2ef04903e2\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1330.6\"}"
+      },
+      {
+        "ts_ns": "1788469735559475928",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"edf6c42a8912db95\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1368.6\"}"
+      },
+      {
+        "ts_ns": "1788469733917041969",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:53Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"dea3b0fda857aaba\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1399.4\"}"
+      },
+      {
+        "ts_ns": "1788469732245121260",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"65d11451805e557f\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1412.5\"}"
+      },
+      {
+        "ts_ns": "1788469738978990180",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:58Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"07851be2cf6dd403\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1415.1\"}"
+      },
+      {
+        "ts_ns": "1788469730562758593",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"6e9b7a588c190e45\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1433.4\"}"
+      },
+      {
+        "ts_ns": "1788469737293099429",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"c251c2a9bc998f4f\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1460.8\"}"
+      },
+      {
+        "ts_ns": "1788469728856401759",
+        "service": "catalog",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"catalog\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"4ea3acec932db700\", \"message\": \"request method=GET path=/products/{sku} status=200 duration_ms=1468.4\"}"
+      },
+      {
+        "ts_ns": "1788469732246428635",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"7d44e4674e254c64\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469737294293013",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"b036e9b0ff8d892f\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469730563956718",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"20677fe8492b2b13\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469738979986638",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:58Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"61ae4f47e6c252c9\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469735561087137",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"2dbc61d58d380af7\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469740564702458",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"637e720add79d0e5\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469733918559386",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:53Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"17f721431fd042ac\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469728857480384",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"70fb78f7518e3284\", \"message\": \"HTTP Request: GET http://catalog:8000/products/OPS-001 \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469732338926469",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"7d44e4674e254c64\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469737384161596",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"b036e9b0ff8d892f\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469730654367593",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"20677fe8492b2b13\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469739066294638",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"61ae4f47e6c252c9\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469735651066678",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"2dbc61d58d380af7\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469740643192166",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"637e720add79d0e5\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469734008160511",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:54Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"17f721431fd042ac\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469728946977509",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"70fb78f7518e3284\", \"message\": \"HTTP Request: POST http://orders:8000/orders \\\"HTTP/1.1 201 Created\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469732319739593",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"7d44e4674e254c64\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469737364013263",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"b036e9b0ff8d892f\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469730633465968",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"20677fe8492b2b13\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469739048689513",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"61ae4f47e6c252c9\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469735631157012",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"2dbc61d58d380af7\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469740631175250",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"637e720add79d0e5\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469733988445136",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:53Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"17f721431fd042ac\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469728927507925",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"70fb78f7518e3284\", \"message\": \"HTTP Request: POST http://toxiproxy:8666/authorize \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469736662195262",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:56Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"ef551458-ce2f-4dbf-a0da-c3045a05f08a\", \"trace_id\": \"5668a73d6563bbe4c6a0c7dfa621cc3f\", \"span_id\": \"493f9107c3cb7aea\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.5\"}"
+      },
+      {
+        "ts_ns": "1788469733259850761",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:53Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"34f0bb19-7709-4a66-a4b6-83f7c35cc18e\", \"trace_id\": \"96ae9f1a06a53e09d4c393f2a7f66205\", \"span_id\": \"0c4f18232333d9d8\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=3.0\"}"
+      },
+      {
+        "ts_ns": "1788469738259452096",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:58Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"ea8a411b-3f37-4768-b4fc-41cb2a531097\", \"trace_id\": \"56cecdbd3b4275bf4f74262b3c11601f\", \"span_id\": \"73282d6e82ae58ef\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=3.2\"}"
+      },
+      {
+        "ts_ns": "1788469728261721717",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"9aedc271-6c19-4530-843a-819cb877670b\", \"trace_id\": \"e1cb75d582fe79a106c788c54934aab2\", \"span_id\": \"32d0fed0d2a6995e\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=3.8\"}"
+      },
+      {
+        "ts_ns": "1788469740643751791",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"637e720add79d0e5\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1418.8\"}"
+      },
+      {
+        "ts_ns": "1788469735651991845",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"2dbc61d58d380af7\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1470.2\"}"
+      },
+      {
+        "ts_ns": "1788469734009453511",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:54Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"17f721431fd042ac\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1499.9\"}"
+      },
+      {
+        "ts_ns": "1788469739067634055",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"61ae4f47e6c252c9\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1511.9\"}"
+      },
+      {
+        "ts_ns": "1788469732339983635",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"7d44e4674e254c64\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1515.2\"}"
+      },
+      {
+        "ts_ns": "1788469730655029968",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"20677fe8492b2b13\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1534.8\"}"
+      },
+      {
+        "ts_ns": "1788469737385346346",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"b036e9b0ff8d892f\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1562.2\"}"
+      },
+      {
+        "ts_ns": "1788469728948017592",
+        "service": "checkout",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"checkout\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"70fb78f7518e3284\", \"message\": \"request method=POST path=/checkout status=200 duration_ms=1568.9\"}"
+      },
+      {
+        "ts_ns": "1788469732340989385",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"37b07bbc8b489103\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469737386070304",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"c42cd0b9dc91369e\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469730655574468",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"44c1fcb8cd3536fe\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469739068382138",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"999b214d97cd2085\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469735652419928",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"c598b48b95d749b7\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469740644485625",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"da293888d587633a\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469734010475178",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:54Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"13529c52c2956171\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469728949067467",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"07acf4ab0bf9a51b\", \"message\": \"HTTP Request: POST http://checkout:8000/checkout \\\"HTTP/1.1 200 OK\\\"\"}"
+      },
+      {
+        "ts_ns": "1788469736661993929",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:56Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"c4cb975b-37be-4a45-b833-ef288b5897c7\", \"trace_id\": \"53dd9588ab6ae85f3fb368ac3099d051\", \"span_id\": \"a1f85eb1a2696caf\", \"message\": \"request method=GET path=/health status=200 duration_ms=1.0\"}"
+      },
+      {
+        "ts_ns": "1788469742918365084",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:09:02Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"41ea2d43-1e16-41da-adf1-a9274fe4f5fe\", \"trace_id\": \"207b88fa6e1e6d979b0b5df032c9b943\", \"span_id\": \"073308eb53e21658\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.7\"}"
+      },
+      {
+        "ts_ns": "1788469732937319344",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"18fe4af0-3c83-49b2-9d9b-f15cdb65fbfa\", \"trace_id\": \"2b410c5fef969c9eb5171945514e2b2a\", \"span_id\": \"be05389561382aac\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.4\"}"
+      },
+      {
+        "ts_ns": "1788469727933641133",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:47Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"c4e0591e-479a-4a42-b7a7-24e4c92695ec\", \"trace_id\": \"64ff533f011a63ff21e0b360d25decfa\", \"span_id\": \"a0a2643694d4c1f2\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.9\"}"
+      },
+      {
+        "ts_ns": "1788469737936542721",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"b7752bf6-02f6-4e54-8616-19e0383d69a6\", \"trace_id\": \"aa27c844a14987eef90d47ad6efeff9a\", \"span_id\": \"957c194f0c922a59\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=3.2\"}"
+      },
+      {
+        "ts_ns": "1788469740645021041",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"da293888d587633a\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1433.6\"}"
+      },
+      {
+        "ts_ns": "1788469735652901470",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"c598b48b95d749b7\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1482.0\"}"
+      },
+      {
+        "ts_ns": "1788469734011279594",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:54Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"13529c52c2956171\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1513.1\"}"
+      },
+      {
+        "ts_ns": "1788469739069076930",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"999b214d97cd2085\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1523.5\"}"
+      },
+      {
+        "ts_ns": "1788469732341808635",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"37b07bbc8b489103\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1527.5\"}"
+      },
+      {
+        "ts_ns": "1788469730656123176",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"44c1fcb8cd3536fe\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1546.5\"}"
+      },
+      {
+        "ts_ns": "1788469737386830929",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"c42cd0b9dc91369e\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1574.6\"}"
+      },
+      {
+        "ts_ns": "1788469728949862217",
+        "service": "gateway",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"gateway\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"07acf4ab0bf9a51b\", \"message\": \"request method=POST path=/api/checkout status=200 duration_ms=1581.3\"}"
+      },
+      {
+        "ts_ns": "1788469736661130971",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:56Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"8d9ee310-5236-4d10-a81e-76cdb28bebd9\", \"trace_id\": \"88cb6b610bde2090efcd43c3e9187a80\", \"span_id\": \"675ba798f7d73441\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788469741152278375",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:09:01Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"dbaf44a5-91fe-482e-854b-fc76e4140803\", \"trace_id\": \"f5d252b6e05ad8b8eabbbec4df65dc26\", \"span_id\": \"b99bcc6d0b481f79\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.7\"}"
+      },
+      {
+        "ts_ns": "1788469731170079426",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:51Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"a871239b-3630-4ef0-8e49-c704c1eb19d5\", \"trace_id\": \"b711e5120ab48921aa37d9dea8ee674c\", \"span_id\": \"887b7923dcbc1d0f\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.3\"}"
+      },
+      {
+        "ts_ns": "1788469736169940512",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:56Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"22d0463a-495c-4359-9ee0-11a3614a6e27\", \"trace_id\": \"99f1a9900795d726bb2760df61d07aea\", \"span_id\": \"9924d10658b9d146\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.1\"}"
+      },
+      {
+        "ts_ns": "1788469739065257097",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"56827947c3689f15\", \"message\": \"request method=POST path=/orders status=201 duration_ms=12.8\"}"
+      },
+      {
+        "ts_ns": "1788469732337905094",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"af4a9642e272693f\", \"message\": \"request method=POST path=/orders status=201 duration_ms=14.1\"}"
+      },
+      {
+        "ts_ns": "1788469728945973300",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"86e0c952c8ab1736\", \"message\": \"request method=POST path=/orders status=201 duration_ms=14.1\"}"
+      },
+      {
+        "ts_ns": "1788469737383015679",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"ab84a84971fd3571\", \"message\": \"request method=POST path=/orders status=201 duration_ms=15.0\"}"
+      },
+      {
+        "ts_ns": "1788469734007118594",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:54Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"77bc85d127b385a0\", \"message\": \"request method=POST path=/orders status=201 duration_ms=15.1\"}"
+      },
+      {
+        "ts_ns": "1788469730653616884",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"111051332a3fc66e\", \"message\": \"request method=POST path=/orders status=201 duration_ms=15.2\"}"
+      },
+      {
+        "ts_ns": "1788469735650577553",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"45706e057c667f77\", \"message\": \"request method=POST path=/orders status=201 duration_ms=16.4\"}"
+      },
+      {
+        "ts_ns": "1788469740642591666",
+        "service": "orders",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"orders\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"f1f1307fd330107c\", \"message\": \"request method=POST path=/orders status=201 duration_ms=9.0\"}"
+      },
+      {
+        "ts_ns": "1788469741093616458",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:01Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"0be37551-e19a-4ef2-8b63-b05044239e5a\", \"trace_id\": \"0c0f3ec0fb1424b1ef5701722f02467a\", \"span_id\": \"909e747db2aa1cc5\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788469761375666718",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:21Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"1c022c9f-c136-4755-ad4c-81c4a592da02\", \"trace_id\": \"7712ad6754145db566a17a64443406bf\", \"span_id\": \"dbed1873a5fba593\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788469771512641000",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:31Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"b276a606-8569-49c4-8ff8-4c4848acec3d\", \"trace_id\": \"32b70f27ca35312fd5f583a6569c468d\", \"span_id\": \"10c2cdb5bd31b45b\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788469751233980713",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:11Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"d9623cf3-7304-43c7-8ef2-c464da5d2962\", \"trace_id\": \"8ed988547a8b627f198f2186f7ff99ee\", \"span_id\": \"6c9fe93bb28f8128\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.2\"}"
+      },
+      {
+        "ts_ns": "1788469730963959926",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"1926c266-1bd3-4e6a-878e-0a2ec547424b\", \"trace_id\": \"ca89a458201d081b3f0335feddf68419\", \"span_id\": \"05621dffee55cead\", \"message\": \"request method=GET path=/health status=200 duration_ms=0.3\"}"
+      },
+      {
+        "ts_ns": "1788469743178479793",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:03Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"8139f486-b863-4ad6-883c-0a7e4437be05\", \"trace_id\": \"8ed7aced7b4f1badc56ab9389db6b768\", \"span_id\": \"5194f6e5bc0cadcb\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=0.7\"}"
+      },
+      {
+        "ts_ns": "1788469768183916055",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:28Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"66c34e36-8145-45ca-a4f2-ec50eac431b7\", \"trace_id\": \"6d16fd465c2ac1a7f43652f1cff59898\", \"span_id\": \"5d2ee1b6d20a656c\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.7\"}"
+      },
+      {
+        "ts_ns": "1788469753183131422",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:13Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"b4a5050a-1da4-47ee-bc65-c6e1f9a1bea0\", \"trace_id\": \"0928539bd544cfec78a2257f46af27bf\", \"span_id\": \"6a0f0a4f78006168\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.7\"}"
+      },
+      {
+        "ts_ns": "1788469748181372087",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:08Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"5bbc8c6e-dc25-41d8-8075-4f3af91a7170\", \"trace_id\": \"45ea3f202fe7129919691f3b32fbeb4f\", \"span_id\": \"1a2c204a898bdff1\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.9\"}"
+      },
+      {
+        "ts_ns": "1788469758180446467",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:18Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"95fc5e93-c17b-4050-ae85-acc2b6e46ad2\", \"trace_id\": \"b7921cf186dffa11553aa58322c83158\", \"span_id\": \"51ffbb15d267b560\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=1.9\"}"
+      },
+      {
+        "ts_ns": "1788469738197103305",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:58Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"4048f7d8-4ce6-41e5-a87f-ec98804bc81d\", \"trace_id\": \"8861c7c58a2310165e000951a3628b70\", \"span_id\": \"e061565be460ad07\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.0\"}"
+      },
+      {
+        "ts_ns": "1788469728194718050",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"a57ab348-a8fb-4ad8-bb6b-77e0b69b74ba\", \"trace_id\": \"b9e69673d0f3c3313880ab63eda5b9e2\", \"span_id\": \"e41601fe3093235f\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.0\"}"
+      },
+      {
+        "ts_ns": "1788469763180228136",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:23Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"15b23c36-871e-4844-987e-d291e1b8148b\", \"trace_id\": \"269b89b743e5480c3253b0c2449a493a\", \"span_id\": \"a81d9a493c5c9a8c\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.1\"}"
+      },
+      {
+        "ts_ns": "1788469773177500001",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:33Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"333077a8-9f27-4ec7-8962-a09fc6f2fea9\", \"trace_id\": \"ed16bfa508877e7986a60342a597cfbd\", \"span_id\": \"24cc1269f35d69e9\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.1\"}"
+      },
+      {
+        "ts_ns": "1788469733196432761",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:53Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"bda86d18-1452-45dd-b770-ea62404f0b12\", \"trace_id\": \"2b08eab975c2b62e76ad040ab807c882\", \"span_id\": \"de0ec165be56b1b5\", \"message\": \"request method=GET path=/metrics status=200 duration_ms=2.2\"}"
+      },
+      {
+        "ts_ns": "1788469740630238166",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:09:00Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"b6d1c69c-d4c4-46d4-a0e5-3b22169e60cd\", \"trace_id\": \"1c991bcc6fdc51d7f6082d700ba693c2\", \"span_id\": \"8293060676bc513f\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=61.9\"}"
+      },
+      {
+        "ts_ns": "1788469737362364304",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:57Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"4221adb5-3d2f-44ab-ae5f-35122f287ec6\", \"trace_id\": \"677553d7720889d783398b219c9c17c2\", \"span_id\": \"5eb98ef1636cbe55\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=63.0\"}"
+      },
+      {
+        "ts_ns": "1788469733986787011",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:53Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"c0b791b1-26a6-4b62-afba-8049453e43ba\", \"trace_id\": \"a6c4176ae0ae8ce4c31f9c13f419ca95\", \"span_id\": \"652ef992916d80c7\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=63.0\"}"
+      },
+      {
+        "ts_ns": "1788469739047233472",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:59Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"771ce466-fa60-4df9-9b17-3358ac58b653\", \"trace_id\": \"a20b2aa8e94c1e3f8b11d9cf423143ad\", \"span_id\": \"f2732e269c5d4b26\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=63.3\"}"
+      },
+      {
+        "ts_ns": "1788469730632080301",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:50Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"4e854f01-3887-47db-bf73-8876e367cf44\", \"trace_id\": \"643bf545b5736b0ee3007602cdb3f06c\", \"span_id\": \"83d2646b4775fd81\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=63.5\"}"
+      },
+      {
+        "ts_ns": "1788469735629773553",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:55Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"7fe522a0-f7e9-4eb2-b715-1ea9f3134298\", \"trace_id\": \"3c5007e48e41de8d57b96e900bd97078\", \"span_id\": \"21932943b4da2e13\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=64.1\"}"
+      },
+      {
+        "ts_ns": "1788469728926172009",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:48Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"e3a9047a-9862-4b88-baec-7bd274757770\", \"trace_id\": \"14a5d57de99d31bdd38b3285787f5820\", \"span_id\": \"116a059cb17d3ec5\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=64.2\"}"
+      },
+      {
+        "ts_ns": "1788469732317923260",
+        "service": "payments",
+        "line": "{\"ts\": \"2026-09-03T21:08:52Z\", \"level\": \"INFO\", \"service\": \"payments\", \"request_id\": \"344a7547-0375-4020-8ae6-dd7189305024\", \"trace_id\": \"0daa6e822d800d2f338678c8f423904d\", \"span_id\": \"1ac808014e9667a2\", \"message\": \"request method=POST path=/authorize status=200 duration_ms=64.9\"}"
+      }
+    ],
+    "recent_traces": [
+      {
+        "trace_id": "6e51907d203799328575efeaef855f5e",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /health",
+            "duration_ms": 0.22,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "19a13b441cce4c45d5806bf567fa93fc",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /metrics",
+            "duration_ms": 0.83,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "b042fc752115d5cc362ec3997cab5de4",
+        "slowest_spans": []
+      },
+      {
+        "trace_id": "820286410c45f98dc9fb74bd93131c28",
+        "slowest_spans": [
+          {
+            "service": "catalog",
+            "name": "GET /metrics",
+            "duration_ms": 1.32,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "1c991bcc6fdc51d7f6082d700ba693c2",
+        "slowest_spans": [
+          {
+            "service": "gateway",
+            "name": "POST /api/checkout",
+            "duration_ms": 1418.52,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "gateway",
+            "name": "POST",
+            "duration_ms": 1407.07,
+            "http_url": "http://checkout:8000/checkout",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST /checkout",
+            "duration_ms": 1403.76,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "GET",
+            "duration_ms": 1318.36,
+            "http_url": "http://catalog:8000/products/OPS-001",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 65.11,
+            "http_url": "http://toxiproxy:8666/authorize",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "POST /authorize",
+            "duration_ms": 62.01,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "mock-provider authorize",
+            "duration_ms": 60.88,
+            "http_url": null,
+            "http_status": null,
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": "mock-payment-provider"
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 11.16,
+            "http_url": "http://orders:8000/orders",
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "3c5007e48e41de8d57b96e900bd97078",
+        "slowest_spans": [
+          {
+            "service": "gateway",
+            "name": "POST /api/checkout",
+            "duration_ms": 1481.89,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "gateway",
+            "name": "POST",
+            "duration_ms": 1473.32,
+            "http_url": "http://checkout:8000/checkout",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST /checkout",
+            "duration_ms": 1470.03,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "GET",
+            "duration_ms": 1372.13,
+            "http_url": "http://catalog:8000/products/OPS-001",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "GET /products/{sku}",
+            "duration_ms": 1368.65,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "redis GET product",
+            "duration_ms": 1367.59,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "redis",
+            "db_operation": "GET",
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 68.21,
+            "http_url": "http://toxiproxy:8666/authorize",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "POST /authorize",
+            "duration_ms": 64.12,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "mock-provider authorize",
+            "duration_ms": 62.83,
+            "http_url": null,
+            "http_status": null,
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": "mock-payment-provider"
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 18.86,
+            "http_url": "http://orders:8000/orders",
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "POST /orders",
+            "duration_ms": 16.25,
+            "http_url": null,
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "postgres connect",
+            "duration_ms": 12.77,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "postgresql",
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "a6c4176ae0ae8ce4c31f9c13f419ca95",
+        "slowest_spans": [
+          {
+            "service": "gateway",
+            "name": "POST /api/checkout",
+            "duration_ms": 1512.95,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "gateway",
+            "name": "POST",
+            "duration_ms": 1503.2,
+            "http_url": "http://checkout:8000/checkout",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST /checkout",
+            "duration_ms": 1499.86,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "GET",
+            "duration_ms": 1402.12,
+            "http_url": "http://catalog:8000/products/OPS-001",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "GET /products/{sku}",
+            "duration_ms": 1399.48,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "redis GET product",
+            "duration_ms": 1398.59,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "redis",
+            "db_operation": "GET",
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 67.91,
+            "http_url": "http://toxiproxy:8666/authorize",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "POST /authorize",
+            "duration_ms": 63.12,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "mock-provider authorize",
+            "duration_ms": 61.72,
+            "http_url": null,
+            "http_status": null,
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": "mock-payment-provider"
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 18.13,
+            "http_url": "http://orders:8000/orders",
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "POST /orders",
+            "duration_ms": 15.1,
+            "http_url": null,
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "postgres connect",
+            "duration_ms": 8.98,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "postgresql",
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      },
+      {
+        "trace_id": "0daa6e822d800d2f338678c8f423904d",
+        "slowest_spans": [
+          {
+            "service": "gateway",
+            "name": "POST /api/checkout",
+            "duration_ms": 1527.16,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "gateway",
+            "name": "POST",
+            "duration_ms": 1518.21,
+            "http_url": "http://checkout:8000/checkout",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST /checkout",
+            "duration_ms": 1515.14,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "GET",
+            "duration_ms": 1415.22,
+            "http_url": "http://catalog:8000/products/OPS-001",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "GET /products/{sku}",
+            "duration_ms": 1412.65,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "catalog",
+            "name": "redis GET product",
+            "duration_ms": 1411.69,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "redis",
+            "db_operation": "GET",
+            "peer_service": null
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 71.39,
+            "http_url": "http://toxiproxy:8666/authorize",
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "POST /authorize",
+            "duration_ms": 64.83,
+            "http_url": null,
+            "http_status": "200",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "payments",
+            "name": "mock-provider authorize",
+            "duration_ms": 63.7,
+            "http_url": null,
+            "http_status": null,
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": "mock-payment-provider"
+          },
+          {
+            "service": "checkout",
+            "name": "POST",
+            "duration_ms": 17.37,
+            "http_url": "http://orders:8000/orders",
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "POST /orders",
+            "duration_ms": 14.15,
+            "http_url": null,
+            "http_status": "201",
+            "db_system": null,
+            "db_operation": null,
+            "peer_service": null
+          },
+          {
+            "service": "orders",
+            "name": "postgres connect",
+            "duration_ms": 9.54,
+            "http_url": null,
+            "http_status": null,
+            "db_system": "postgresql",
+            "db_operation": null,
+            "peer_service": null
+          }
+        ]
+      }
+    ],
+    "containers": {
+      "error": "404 Client Error for http+docker://localhost/v1.55/images/8f618b5e0db4cefe65164179dcd3c198fefeb8a9ce559f8c5f18cfb985140309/json: Not Found (\"No such image: sha256:8f618b5e0db4cefe65164179dcd3c198fefeb8a9ce559f8c5f18cfb985140309\")"
+    }
+  },
+  "diagnosis": {
+    "error": "Invalid JSON: Expecting value: line 1 column 1 (char 0)"
+  },
+  "evaluation": {
+    "service_match": false,
+    "root_cause_match": false,
+    "matched_keywords": [],
+    "required_keyword_matches": 2,
+    "pass": false
+  },
+  "run": {
+    "agent_version": "0.6.0",
+    "model": "qwen3:8b",
+    "model_stats": {
+      "model": "qwen3:8b",
+      "done_reason": "stop",
+      "total_duration_ns": 23744798511,
+      "load_duration_ns": 4620106211,
+      "prompt_eval_count": 2050,
+      "prompt_eval_duration_ns": 17157149000,
+      "eval_count": 26,
+      "eval_duration_ns": 1913150000
+    },
+    "telemetry_sources": [
+      "prometheus",
+      "loki",
+      "tempo",
+      "docker"
+    ]
+  },
+  "automation": {
+    "mode": "policy-controlled",
+    "fallback_used": false,
+    "detection": {
+      "trigger": "checkout_p95",
+      "value": 4.25,
+      "threshold": 0.75
+    },
+    "evidence": {
+      "investigation": {
+        "captured_at": "2026-09-03T21:10:11.587230+00:00",
+        "phase": "investigation",
+        "grafana_url": "http://grafana:3000",
+        "window": {
+          "from": "2026-09-03T20:55:11.587230+00:00",
+          "to": "2026-09-03T21:10:11.587230+00:00"
+        },
+        "screenshots": [
+          {
+            "dashboard_uid": "incident-investigation",
+            "label": "incident-investigation",
+            "file": "evidence/investigation-incident-investigation.png",
+            "status": "captured"
+          },
+          {
+            "dashboard_uid": "baker-street-overview",
+            "label": "baker-street-overview",
+            "file": "evidence/investigation-baker-street-overview.png",
+            "status": "captured"
+          }
+        ]
+      },
+      "final": {
+        "captured_at": "2026-09-03T21:10:30.223557+00:00",
+        "phase": "final",
+        "grafana_url": "http://grafana:3000",
+        "window": {
+          "from": "2026-09-03T20:55:30.223557+00:00",
+          "to": "2026-09-03T21:10:30.223557+00:00"
+        },
+        "screenshots": [
+          {
+            "dashboard_uid": "incident-investigation",
+            "label": "incident-investigation",
+            "file": "evidence/final-incident-investigation.png",
+            "status": "captured"
+          },
+          {
+            "dashboard_uid": "baker-street-overview",
+            "label": "baker-street-overview",
+            "file": "evidence/final-baker-street-overview.png",
+            "status": "captured"
+          }
+        ]
+      }
+    },
+    "authorization": {
+      "approved": false,
+      "action": "none",
+      "reason": "action is not allowlisted"
+    },
+    "recovery": {
+      "pass": false,
+      "skipped": true
+    }
+  },
+  "timeline": [
+    {
+      "timestamp": "2026-09-03T21:09:00.879166+00:00",
+      "phase": "detection",
+      "status": "waiting",
+      "detail": "Monitoring Baker Street telemetry for an incident trigger"
+    },
+    {
+      "timestamp": "2026-09-03T21:09:00.902788+00:00",
+      "phase": "detection",
+      "status": "triggered",
+      "detail": "Detected checkout_p95",
+      "detection": {
+        "trigger": "checkout_p95",
+        "value": 4.25,
+        "threshold": 0.75
+      }
+    },
+    {
+      "timestamp": "2026-09-03T21:10:02.119828+00:00",
+      "phase": "investigation",
+      "status": "complete",
+      "detail": "AI investigation artifact created",
+      "incident_id": "INC-20260903T211001Z-redis_latency"
+    },
+    {
+      "timestamp": "2026-09-03T21:10:25.266469+00:00",
+      "phase": "evidence",
+      "status": "captured",
+      "detail": "Captured 2 Grafana screenshots",
+      "phase_name": "investigation"
+    },
+    {
+      "timestamp": "2026-09-03T21:10:25.266545+00:00",
+      "phase": "policy",
+      "status": "denied",
+      "detail": "action is not allowlisted",
+      "action": "none"
+    },
+    {
+      "timestamp": "2026-09-03T21:10:25.266559+00:00",
+      "phase": "remediation",
+      "status": "skipped",
+      "detail": "No autonomous action executed"
+    },
+    {
+      "timestamp": "2026-09-03T21:10:44.675626+00:00",
+      "phase": "evidence",
+      "status": "captured",
+      "detail": "Captured 2 Grafana screenshots",
+      "phase_name": "final"
+    }
+  ]
+}

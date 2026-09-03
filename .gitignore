@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.env
+artifacts/incidents/*
+!artifacts/incidents/.gitkeep
+site/dist/
+.DS_Store

@@ -1,0 +1,13 @@
+id: checkout_latency
+title: Checkout latency regression
+severity: SEV-2
+inject:
+  endpoint: /admin/fault/checkout_latency
+expected:
+  affected_service: checkout
+  root_cause: injected checkout processing latency
+  remediation: reset the fault or roll back the checkout change
+signals:
+  - checkout p95 latency rises sharply
+  - catalog, payments, and orders remain healthy
+  - checkout_fault_active becomes 1
