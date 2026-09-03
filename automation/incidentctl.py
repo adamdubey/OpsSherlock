@@ -99,6 +99,24 @@ def run_investigator(scenario, timeline):
     return path, record
 
 
+def capture_evidence(incident_id, phase, timeline):
+    """Capture Grafana screenshots without making evidence collection incident-critical."""
+    cmd = [
+        "docker", "compose", "--profile", "tools", "run", "--rm", "--build",
+        "publisher", "--incident", incident_id, "--phase", phase,
+    ]
+    proc = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True)
+    manifest_path = ARTIFACTS / incident_id / "evidence" / f"{phase}-manifest.json"
+    if proc.returncode == 0 and manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text())
+        captured = sum(1 for x in manifest.get("screenshots", []) if x.get("status") == "captured")
+        timeline_event(timeline, "evidence", "captured", f"Captured {captured} Grafana screenshots", phase_name=phase)
+        return manifest
+    detail = (proc.stderr or proc.stdout or f"publisher exited {proc.returncode}").strip()[-800:]
+    timeline_event(timeline, "evidence", "warning", "Grafana screenshot capture failed; incident response continues", phase_name=phase)
+    return {"phase": phase, "status": "error", "error": detail}
+
+
 def authorize(diagnosis):
     action = diagnosis.get("remediation_action", "none")
     confidence = float(diagnosis.get("confidence", 0) or 0)
@@ -215,6 +233,7 @@ def main():
     timeline_event(timeline, "detection", "triggered", f"Detected {detection['trigger']}", detection=detection)
 
     path, record = run_investigator(args.scenario, timeline)
+    automation["evidence"] = {"investigation": capture_evidence(record["id"], "investigation", timeline)}
     diagnosis = record.get("diagnosis", {})
     decision = authorize(diagnosis)
     automation["authorization"] = decision
@@ -223,6 +242,7 @@ def main():
     if args.no_remediate or not decision["approved"]:
         automation["recovery"] = {"pass": False, "skipped": True}
         timeline_event(timeline, "remediation", "skipped", "No autonomous action executed")
+        automation["evidence"]["final"] = capture_evidence(record["id"], "final", timeline)
         persist(path, record, timeline, automation)
         print(json.dumps({"incident": record["id"], "automation": automation}, indent=2))
         return
@@ -250,6 +270,7 @@ def main():
                 f"Fallback recovery: {fallback_verification['successes']}/{fallback_verification['requests']} synthetic checkouts succeeded",
             )
 
+    automation["evidence"]["recovery"] = capture_evidence(record["id"], "recovery", timeline)
     persist(path, record, timeline, automation)
     print(json.dumps({"incident": record["id"], "automation": automation, "artifact": str(path.parent)}, indent=2))
 
